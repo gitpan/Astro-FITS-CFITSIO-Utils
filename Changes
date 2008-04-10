@@ -1,0 +1,26 @@
+Revision history for Perl extension Astro::FITS::CFITSIO::Utils.
+
+0.10  Thu Apr 10 17:17:15 EDT 2008
+        - added colkeys.
+	- deprecate croak_status; instead use
+		   Astro::FITS::CFITSIO::CheckStatus
+
+0.06  Mon Feb 11 17:57:14 EST 2008
+        - keywords weren't always treated in a case-insensitive fashion
+
+0.05  Mon Jun  9 18:07:10 EDT 2003
+        - added Value option to keypar to return just the values
+
+0.04  Sat Mar  8 23:09:25 EST 2003
+        - added multiple keywords, OnePerHDU flag.  Should be
+	  backwards compatible.
+
+0.03  Wed Jan 29 16:16:00 2003
+	- convert to use a myItem, derived from an Astro::FITS::Headers::Item;
+	  this adds an hdu_num method which records the HDU number in
+	  which the keyword was found.
+
+0.01  Wed Nov 13 17:00:57 2002
+	- original version; created by h2xs 1.21 with options
+		-A -X -n Astro::FITS::CFITSIO::Utils
+

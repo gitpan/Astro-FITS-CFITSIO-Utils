@@ -1,0 +1,91 @@
+2008-04-10  Diab Jerius  <djerius@cfa.harvard.edu>
+
+	Tag 0.10
+
+2008-04-10 17:23 -0400  djerius  <djerius@cfa.harvard.edu>  (01b6e192de2f [tip])
+
+	* Makefile.PL, lib/Astro/FITS/CFITSIO/Utils.pm:
+	introduce use of Params::Validate
+
+2008-04-10 17:16 -0400  djerius  <djerius@cfa.harvard.edu>  (038cb04e8b59)
+
+	* Makefile.PL, lib/Astro/FITS/CFITSIO/Utils.pm, t/colkeys.t:
+	added colkeys routine
+
+2008-04-10 17:16 -0400  djerius  <djerius@cfa.harvard.edu>  (936871eb7dd2)
+
+	* LICENSE:
+	had GPL2 instead of GPL3 LICENSE file
+
+2008-02-11 18:15 -0500  djerius  <djerius@cfa.harvard.edu>  (73b8b6d8eeca)
+
+	* .hgtags:
+	Added tag 0.06 for changeset 6213d26c3af8
+
+2008-02-11 18:15 -0500  djerius  <djerius@cfa.harvard.edu>  (6213d26c3af8 [0.06])
+
+	* ChangeLog, Changes, Makefile.PL, lib/Astro/FITS/CFITSIO/Utils.pm:
+	update for release
+
+2008-02-11 17:55 -0500  djerius  <djerius@cfa.harvard.edu>  (bb8c0f79d1d1)
+
+	* lib/Astro/FITS/CFITSIO/Utils.pm, t/keypar.t:
+	make keywords case insensitive
+
+2008-02-11 16:18 -0500  djerius  <djerius@cfa.harvard.edu>  (09ca7e27f42f)
+
+	* GNUmakefile, MANIFEST, MANIFEST.SKIP, Makefile.PL, README, Utils.pm,
+	lib/Astro/FITS/CFITSIO/Utils.pm, t/00-load.t, t/perlcritic.t, t/pod-
+	coverage.t, t/pod.t:
+	reorganized
+
+	* use Module::Install
+	* added PerlCritic, Pod tests
+	* removed chaff
+
+2008-02-11 08:26 +0000  convert-repo  <convert-repo>  (ce463b56ae6f)
+
+	* .hgtags:
+	update tags
+
+2003-06-10 16:27 -0400  dj  <dj>  (97762b7f27ea [V0_05])
+
+	* Utils.pm, t/keypar.t:
+	keyval did not handle non-existant keywords gracefully
+
+2003-06-09 18:07 -0400  dj  <dj>  (2f9a67cb87a6)
+
+	* Changes, Utils.pm, t/keypar.t:
+	added Value option to keypar to return just the values
+
+2003-03-08 23:12 -0500  dj  <dj>  (9fddd95e5af5)
+
+	* Changes, Utils.pm, data/bintbl.fits, t/keypar.t:
+	added multiple keywords per call to keypar
+
+2003-01-29 18:18 -0500  gaetz  <gaetz>  (92ab0626a94f)
+
+	* Changes, Utils.pm, t/keypar.t:
+	change to use myItem derived from Astro::FITS::Headers::Item; adds a
+	hdu_num method.
+
+2002-11-20 14:58 -0500  dj  <dj>  (b238a32b7104 [V0_02])
+
+	* Makefile.PL, Utils.pm, t/keypar.t:
+	now use Astro::FITS::Header for keypar; api change
+
+2002-11-13 18:28 -0500  dj  <dj>  (6a4a1a4134af [V0_01])
+
+	* GNUmakefile, MANIFEST, Utils.pm:
+	*** empty log message ***
+
+2002-11-13 18:26 -0500  dj  <dj>  (27d553c68920 [initial])
+
+	* 
+
+2002-11-13 18:26 -0500  dj  <dj>  (db83174075ca)
+
+	* Changes, LICENSE, MANIFEST, Makefile.PL, README, Utils.pm,
+	data/bintbl.fits, t/keypar.t:
+	Initial revision
+
