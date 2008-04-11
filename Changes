@@ -1,5 +1,8 @@
 Revision history for Perl extension Astro::FITS::CFITSIO::Utils.
 
+0.11  Fri Apr 11 13:05:19 EDT 2008
+        - distribution was missing the local Module::Install inc dir.
+
 0.10  Thu Apr 10 17:17:15 EDT 2008
         - added colkeys.
 	- deprecate croak_status; instead use

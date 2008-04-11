@@ -1,8 +1,23 @@
-2008-04-10  Diab Jerius  <djerius@cfa.harvard.edu>
+2008-04-11  Diab Jerius  <djerius@cfa.harvard.edu>
 
-	Tag 0.10
+	Tag 0.11
 
-2008-04-10 17:23 -0400  djerius  <djerius@cfa.harvard.edu>  (01b6e192de2f [tip])
+2008-04-11 13:06 -0400  djerius  <djerius@cfa.harvard.edu>  (9b82795046af [tip])
+
+	* MANIFEST.SKIP:
+	remove excluded inc directory, so MANIFEST is complete
+
+2008-04-10 17:34 -0400  djerius  <djerius@cfa.harvard.edu>  (71f26243014d)
+
+	* .hgtags:
+	Added tag 0.10 for changeset f5a21e8710af
+
+2008-04-10 17:34 -0400  djerius  <djerius@cfa.harvard.edu>  (f5a21e8710af [0.10])
+
+	* ChangeLog, Changes, lib/Astro/FITS/CFITSIO/Utils.pm:
+	update for release
+
+2008-04-10 17:23 -0400  djerius  <djerius@cfa.harvard.edu>  (01b6e192de2f)
 
 	* Makefile.PL, lib/Astro/FITS/CFITSIO/Utils.pm:
 	introduce use of Params::Validate

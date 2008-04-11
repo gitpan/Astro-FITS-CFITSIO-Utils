@@ -21,4 +21,4 @@ requires:
   Astro::FITS::Header::CFITSIO: 0
   Params::Validate: 0
   perl: 5.6.0
-version: 0.10
+version: 0.11
