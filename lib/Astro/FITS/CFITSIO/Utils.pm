@@ -27,7 +27,7 @@ use warnings;
 
 use Carp;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Carp;
 
@@ -91,7 +91,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
-keypar	
+keypar
 keyval
 colkeys
 croak_status
@@ -142,10 +142,10 @@ sub keypar
   my %opt = ( Accumulate => ref $_[0] || ! wantarray() ? 0 : 1,
 	      OnePerHDU  => ref $_[0] || ! wantarray() ? 1 : 0,
 	      Value => 0,
-	       $opts ? %$opts : () 
+	       $opts ? %$opts : ()
 	     );
 
-  $opt{CurrentHDU} = 0 
+  $opt{CurrentHDU} = 0
     unless defined $opt{CurrentHDU} || $file =~ /\[/;
 
   my $keyword;
@@ -202,7 +202,7 @@ sub keypar
 	foreach ( @newfound )
 	{
 	  my $item = myItem->new( Card => $_->card, HDU_NUM => $ext);
-	  push @$found, 
+	  push @$found,
 	    $opt{Value} && defined $item ? $item->value : $item;
 	}
 	$nfound ++;
@@ -319,10 +319,13 @@ sub colkeys {
             $name = "${name}_${idx}";
         }
 
-        for my $item ( $hdr->itembyname( qr/^T\D+$coln$/i ) )
+        for my $item ( grep { $_ !~ /^NAXIS/ }
+		       $hdr->itembyname( qr/\D+$coln([a-z])?$/i ) )
         {
-            $item->keyword =~ /(.*?)\d+$/;
-            $info{lc $1} = $item->value;
+            my $key = lc join('',
+			      grep { defined }
+			      $item->keyword =~ /(.*)$coln(.*)$/ );
+            $info{$key} = $item->value;
         }
 
         $colkeys{$name} = { hdr => \%info,
@@ -339,7 +342,7 @@ sub croak_status {
   {
     Astro::FITS::CFITSIO::fits_get_errstatus($s, my $txt);
 
-    local $Carp::CarpLevel = $Carp::CarpLevel + 1; 
+    local $Carp::CarpLevel = $Carp::CarpLevel + 1;
     croak @_, "CFITSIO Error: $txt\n";
   }
 }
@@ -365,7 +368,7 @@ This is a bundle of useful FITS routines which use CFITSIO.
 
 =head2 Errors
 
-Errors are generally returned by B<croak()>ing.  Error messages 
+Errors are generally returned by B<croak()>ing.  Error messages
 will begin with C<Astro::FITS::CFITSIO::Utils>.
 
 
@@ -439,14 +442,14 @@ C<OnePerHDU> only affects C<COMMENT> and C<HEADER> keywords.
 If an arrayref of keyword(s) is passed C<Accumulate> defaults to 0 and
 C<OnePerHDU> to 1.  This results in the following behavior:
 
-  ( $hdr_keyw1, $hdr_keyw2 ) = 
+  ( $hdr_keyw1, $hdr_keyw2 ) =
           keypar( $file, [ $keyw1, $key2 ] );
 
 If either C<OnePerHDU> = 0 or C<Accumulate> = 1, a keyword might
 match multiple times, and the returned values are arrayrefs containing
 the list of matched items:
 
-  ( $arrayref_keyw1, $arrayref_keyw2 ) = 
+  ( $arrayref_keyw1, $arrayref_keyw2 ) =
          keypar( $file, [ $keyw, $keyw2], { Accumulate => 1 } );
 
 =back

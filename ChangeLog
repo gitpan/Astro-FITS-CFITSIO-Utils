@@ -1,8 +1,28 @@
-2008-04-11  Diab Jerius  <djerius@cfa.harvard.edu>
+2010-12-06 12:27 -0500  djerius  <djerius@cfa.harvard.edu>  (895c4087620f [tip])
 
-	Tag 0.11
+	* lib/Astro/FITS/CFITSIO/Utils.pm:
+	remove trailing whitespace
 
-2008-04-11 13:06 -0400  djerius  <djerius@cfa.harvard.edu>  (9b82795046af [tip])
+2010-12-06 12:27 -0500  djerius  <djerius@cfa.harvard.edu>  (b389a360de39)
+
+	* data/bintbl.fits, lib/Astro/FITS/CFITSIO/Utils.pm, t/colkeys.t:
+	only parsed a subset of binary column related keywords
+
+	It seems that column related keys can begin with letters other than
+	'T', (such as LONP1) and may (if they are WCS related) have an
+	alternative WCS system code (a-z) at the end (such as LONP1a).
+
+2010-06-04 13:45 -0400  djerius  <djerius@cfa.harvard.edu>  (7c1fada84349)
+
+	* .hgtags:
+	Added tag 0.11 for changeset d23effaec30e
+
+2010-06-04 13:44 -0400  djerius  <djerius@cfa.harvard.edu>  (d23effaec30e [0.11])
+
+	* ChangeLog, Changes, lib/Astro/FITS/CFITSIO/Utils.pm:
+	update logs and version for release
+
+2008-04-11 13:06 -0400  djerius  <djerius@cfa.harvard.edu>  (9b82795046af)
 
 	* MANIFEST.SKIP:
 	remove excluded inc directory, so MANIFEST is complete
@@ -24,6 +44,7 @@
 
 2008-04-10 17:16 -0400  djerius  <djerius@cfa.harvard.edu>  (038cb04e8b59)
 
+	* t/colkeys.t: new file.
 	* Makefile.PL, lib/Astro/FITS/CFITSIO/Utils.pm, t/colkeys.t:
 	added colkeys routine
 
@@ -39,6 +60,7 @@
 
 2008-02-11 18:15 -0500  djerius  <djerius@cfa.harvard.edu>  (6213d26c3af8 [0.06])
 
+	* ChangeLog: new file.
 	* ChangeLog, Changes, Makefile.PL, lib/Astro/FITS/CFITSIO/Utils.pm:
 	update for release
 
@@ -49,6 +71,9 @@
 
 2008-02-11 16:18 -0500  djerius  <djerius@cfa.harvard.edu>  (09ca7e27f42f)
 
+	* MANIFEST.SKIP, lib/Astro/FITS/CFITSIO/Utils.pm, t/00-load.t,
+	t/perlcritic.t, t/pod-coverage.t, t/pod.t: new file.
+	* GNUmakefile, MANIFEST, Utils.pm: deleted file.
 	* GNUmakefile, MANIFEST, MANIFEST.SKIP, Makefile.PL, README, Utils.pm,
 	lib/Astro/FITS/CFITSIO/Utils.pm, t/00-load.t, t/perlcritic.t, t/pod-
 	coverage.t, t/pod.t:
@@ -60,6 +85,7 @@
 
 2008-02-11 08:26 +0000  convert-repo  <convert-repo>  (ce463b56ae6f)
 
+	* .hgtags: new file.
 	* .hgtags:
 	update tags
 
@@ -91,15 +117,18 @@
 
 2002-11-13 18:28 -0500  dj  <dj>  (6a4a1a4134af [V0_01])
 
+	* GNUmakefile: new file.
 	* GNUmakefile, MANIFEST, Utils.pm:
 	*** empty log message ***
 
-2002-11-13 18:26 -0500  dj  <dj>  (27d553c68920 [initial])
+2002-11-13 18:26 -0500  dj  <dj>  (27d553c68920 [initial] <dj>)
 
 	* 
 
 2002-11-13 18:26 -0500  dj  <dj>  (db83174075ca)
 
+	* Changes, LICENSE, MANIFEST, Makefile.PL, README, Utils.pm,
+	data/bintbl.fits, t/keypar.t: new file.
 	* Changes, LICENSE, MANIFEST, Makefile.PL, README, Utils.pm,
 	data/bintbl.fits, t/keypar.t:
 	Initial revision
