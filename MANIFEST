@@ -1,7 +1,6 @@
 ChangeLog
 Changes
 data/bintbl.fits
-data/bintbl.fits.orig
 inc/Module/AutoInstall.pm
 inc/Module/Install.pm
 inc/Module/Install/AutoInstall.pm
@@ -22,6 +21,7 @@ META.yml
 README
 t/00-load.t
 t/colkeys.t
+t/fptr.t
 t/keypar.t
 t/perlcritic.t
 t/pod-coverage.t

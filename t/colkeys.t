@@ -1,14 +1,16 @@
 #!perl
 
-use Test::More tests => 6;
+use Test::More tests => 9;
 
 BEGIN{ use_ok( 'Astro::FITS::CFITSIO::Utils', 'colkeys' ) };
+
+my $file = 'data/bintbl.fits';
 
 my %colkeys;
 
 # find the first table
 eval {
-  %colkeys = colkeys( 'data/bintbl.fits' );
+  %colkeys = colkeys( $file );
 };
 ok( ! $@, 'colkeys: first table'  )
     or diag $@;
@@ -17,7 +19,7 @@ is_deeply( \%colkeys, exp_colkeys(), 'colkeys: first table values' );
 
 # give it a specific table
 eval {
-  %colkeys = colkeys( 'data/bintbl.fits', { extname => 'events' } );
+  %colkeys = colkeys( $file, { extname => 'events' } );
 };
 ok( ! $@, 'colkeys: events table'  )
     or diag $@;
@@ -27,9 +29,41 @@ is_deeply( \%colkeys, exp_colkeys(), 'colkeys: events table values' );
 
 # give it a bogus table
 eval {
-  %colkeys = colkeys( 'data/bintbl.fits', { extname => 'bogus' } );
+  %colkeys = colkeys( $file, { extname => 'bogus' } );
 };
 ok( $@ && $@ =~ /bogus/, 'colkeys: expect exceptions' );
+
+
+####################################################
+# now test with an opened file
+
+use Astro::FITS::CFITSIO qw[ READONLY ];
+use Astro::FITS::CFITSIO::CheckStatus;
+
+tie my $status, 'Astro::FITS::CFITSIO::CheckStatus';
+
+my $fptr = Astro::FITS::CFITSIO::open_file( $file, READONLY, $status );
+
+# move to second HDU just to test things
+$fptr->get_hdu_num( my $init_hdu_num );
+$fptr->movabs_hdu( ++$init_hdu_num, undef, $status );
+
+my $hdu_num;
+
+# give it a specific table
+eval {
+  %colkeys = colkeys( $fptr, { extname => 'events' } );
+};
+ok( ! $@, 'colkeys: events table'  )
+    or diag $@;
+
+is_deeply( \%colkeys, exp_colkeys(), 'colkeys: events table values' );
+
+$fptr->get_hdu_num( $hdu_num );
+ok ( $hdu_num == $init_hdu_num, "colkeys: init hdu" );
+
+
+###################################################
 
 
 sub exp_colkeys {

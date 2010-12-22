@@ -27,14 +27,14 @@ use warnings;
 
 use Carp;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 use Carp;
 
 use Astro::FITS::Header::Item;
 
 {
-  package myItem;
+  package Astro::FITS::CFITSIO::Utils::Item;
 
   our @ISA = qw( Astro::FITS::Header::Item );
 
@@ -82,7 +82,11 @@ use Astro::FITS::Header::Item;
 }
 
 use Astro::FITS::Header::CFITSIO;
-use Astro::FITS::CFITSIO qw( :constants );
+use Astro::FITS::CFITSIO
+  qw[ READONLY CASEINSEN
+      ANY_HDU ASCII_TBL BINARY_TBL
+      BAD_HDU_NUM END_OF_FILE
+   ];
 use Astro::FITS::CFITSIO::CheckStatus;
 use Params::Validate qw( validate_with :types );
 
@@ -173,17 +177,33 @@ sub keypar
 
   my %keywords = map { $_ => [] } @$keyword;
 
-  my $status = 0;
-  my $fptr = Astro::FITS::CFITSIO::open_file( $file, READONLY, $status );
-  croak_status($status, __PACKAGE__, "::keypar: error reading $file\n" );
+  # are we passed a pointer to an open file?
+  my $file_is_open = eval { $file->isa( 'fitsfilePtr' ) };
+  my $fptr;
 
+  tie my $status, 'Astro::FITS::CFITSIO::CheckStatus';
+
+  if ( $file_is_open )
+  {
+      $fptr = $file;
+  }
+
+  else
+  {
+      $fptr = Astro::FITS::CFITSIO::open_file
+	( $file, READONLY,
+	  $status = __PACKAGE__ . "::keypar: error reading $file: " );
+  }
+
+  $fptr->get_hdu_num( my $init_hdu_num );
+  $fptr->movabs_hdu( 1, undef, $status );
   $fptr->get_hdu_num( my $ext );
 
   # number of keywords found. used to short circuit search if
   # Accumulate == 0
   my $nfound = 0;
 
-  for (;; $ext++ )
+  for ( ;; $ext++ )
   {
     my $hdr = Astro::FITS::Header::CFITSIO->new( fitsID => $fptr,
 						 ReadOnly => 1 );
@@ -201,7 +221,7 @@ sub keypar
 	$#newfound = 0 if $opt{OnePerHDU};
 	foreach ( @newfound )
 	{
-	  my $item = myItem->new( Card => $_->card, HDU_NUM => $ext);
+	  my $item = Astro::FITS::CFITSIO::Utils::Item->new( Card => $_->card, HDU_NUM => $ext);
 	  push @$found,
 	    $opt{Value} && defined $item ? $item->value : $item;
 	}
@@ -212,8 +232,16 @@ sub keypar
     last if $opt{CurrentHDU} ||
       ! $opt{Accumulate} && $nfound == @$keyword;
 
-    $fptr->movrel_hdu( 1, undef, $status ) == 0 or last;
+    $fptr->movrel_hdu( 1, undef, my $lstatus = 0);
+
+    last if $lstatus == BAD_HDU_NUM || $lstatus == END_OF_FILE;
+    croak_status( $lstatus );
   }
+
+  # done mucking about in the file; if it was an existing opened file
+  # return to the initial HDU
+  $fptr->movabs_hdu( $init_hdu_num, my $dummy, $status )
+    if $file_is_open;
 
   # if passed an array ref for $keyword, prepare to handle multiple
   # keywords
@@ -263,9 +291,23 @@ sub colkeys {
                               normalize_keys => sub { lc $_[0] },
                             );
 
+    # are we passed a pointer to an open file?
+    my $file_is_open = eval { $file->isa( 'fitsfilePtr' ) };
+    my $fptr;
+    my $init_hdu_num;
+
     tie my $error, 'Astro::FITS::CFITSIO::CheckStatus';
-    $error = "Error reading $file: ";
-    my $fptr = Astro::FITS::CFITSIO::open_file( $file, READONLY, $error );
+
+    if ( $file_is_open )
+    {
+	$fptr = $file;
+	$fptr->get_hdu_num( $init_hdu_num );
+    }
+    else
+    {
+	$error = "Error reading $file: ";
+	$fptr = Astro::FITS::CFITSIO::open_file( $file, READONLY, $error );
+    }
 
     # move to specified HDU
     if ( $opt{extname} )
@@ -332,6 +374,11 @@ sub colkeys {
                            idx => $coln };
     }
 
+    # done mucking about in the file; if it was an existing opened file
+    # return to the initial HDU
+    $fptr->movabs_hdu( $init_hdu_num, undef, $error )
+      if $file_is_open;
+
     return %colkeys;
 }
 
@@ -381,11 +428,11 @@ will begin with C<Astro::FITS::CFITSIO::Utils>.
 This is a wrapper around B<keypar> which sets the C<Value> option.
 For example, instead of this kludge:
 
-  $value = keypar( $filename, $keyword, { Value => 1 } );
+  $value = keypar( $file, $keyword, { Value => 1 } );
 
 you can type
 
-  $value = keyval( $filename, $keyword );
+  $value = keyval( $file, $keyword );
 
 Everything else is the same as B<keypar> (including the error messages,
 which refer to B<keypar>).
@@ -393,21 +440,25 @@ which refer to B<keypar>).
 =item keypar
 
   # single keyword, return first match
-  $myitem  = keypar( $filename, $keyword, [\%opts] );
+  $myitem  = keypar( $file, $keyword, [\%opts] );
 
   # single keyword, multiple HDU matches
-  @myitems = keypar( $filename, $keyword, [\%opts] );
+  @myitems = keypar( $file, $keyword, [\%opts] );
 
 
   # multiple keywords
-  @items = keypar( $filename, \@keyw, [\%opts] );
+  @items = keypar( $file, \@keyw, [\%opts] );
 
 This routine searches the headers in the specified FITS file for a
-keyword with the given name.  The matching keywords are returned
-either as B<myItem> objects which inherit from
+keyword with the given name.  C<$file> may be a filename or a file heandle
+returned by B<Astro::FITS::CFITSIO::open_file()>.  In the latter case
+the handle's current HDU is restored after the call to B<keypar>.
+
+The matching keywords are returned either as
+B<Astro::FITS::CFITSIO::Utils::Item> objects which inherit from
 B<Astro::FITS::Header::Item> objects, as the value of the keyword (if
 the C<Value> option is specified), or B<undef> if no match was found.
-The B<myItem> object adds a member B<hdr_num> which records the number
+The B<myItem> object adds a member B<hdu_num> which records the number
 of the HDU in which the keyword is found.
 
 A single keyword may be matched multiple times in an HDU (if it is
@@ -450,7 +501,8 @@ match multiple times, and the returned values are arrayrefs containing
 the list of matched items:
 
   ( $arrayref_keyw1, $arrayref_keyw2 ) =
-         keypar( $file, [ $keyw, $keyw2], { Accumulate => 1 } );
+         keypar( $file, [ $keyw, $keyw2],
+                  { Accumulate => 1 } );
 
 =back
 

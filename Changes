@@ -1,5 +1,12 @@
 Revision history for Perl extension Astro::FITS::CFITSIO::Utils.
 
+0.13  Wed Dec 22 10:41:29 EST 2010
+        - returned items are blessed into Astro::FITS::CFITSIO::Utils::Item,
+	  rather than myItem, as that's bogus name space pollution.
+	- fixed documentation which called the hdu_num attribute hdr_num.
+	- routines can now take a handle to an opened file as well
+	  as a file name
+
 0.12  Mon Dec  6 12:29:01 EST 2010
         - colkeys wasn't finding all of the column associated
 	  keywords.  It's now better at this, but may pick up some

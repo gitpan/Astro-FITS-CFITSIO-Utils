@@ -1,4 +1,33 @@
-2010-12-06 12:27 -0500  djerius  <djerius@cfa.harvard.edu>  (895c4087620f [tip])
+2010-12-22  Diab Jerius  <dj@macabre.cfa.harvard.edu>
+
+	Tag 0.13
+
+2010-12-22 10:53 -0500  djerius  <djerius@cfa.harvard.edu>  (8006a476ec25 [tip])
+
+	* .hgtags:
+	Added tag 0.12 for changeset 34e94a2431b9
+
+2010-12-22 10:46 -0500  djerius  <djerius@cfa.harvard.edu>  (46df209f2344)
+
+	* t/fptr.t: new file.
+	* lib/Astro/FITS/CFITSIO/Utils.pm, t/colkeys.t, t/fptr.t:
+	bless items into Astro::FITS::CFITSIO::Utils::Item. methods can take
+	fits handles
+
+	* returned items are blessed into Astro::FITS::CFITSIO::Utils::Item,
+	rather than myItem, as that's bogus name space pollution.
+
+	* fixed documentation which called the hdu_num attribute hdr_num.
+
+	* routines can now take a handle to an opened file as well as a
+	file name
+
+2010-12-06 12:31 -0500  djerius  <djerius@cfa.harvard.edu>  (34e94a2431b9 [0.12])
+
+	* ChangeLog, Changes, lib/Astro/FITS/CFITSIO/Utils.pm:
+	update logs and version for release
+
+2010-12-06 12:27 -0500  djerius  <djerius@cfa.harvard.edu>  (895c4087620f)
 
 	* lib/Astro/FITS/CFITSIO/Utils.pm:
 	remove trailing whitespace
